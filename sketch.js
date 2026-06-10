@@ -8,6 +8,14 @@ let smoothMouseY = 300;
 let scattered = false;
 let scatterProgress = 0;
 
+// Audio variables
+let ambientMusic;
+let colorPhase = 0;
+
+function preload() {
+  ambientMusic = loadSound('softclouds.mp3');
+}
+
 function setup() {
   createCanvas(600, 600);
   pixelDensity(1);
@@ -129,7 +137,13 @@ function drawStaticCloud(cx, cy, scale) {
 }
 
 function drawSketch() {
-  background(200, 230, 230);
+  // Slowly cycle through rainbow colors
+  colorPhase += 0.0005; // Very slow transition
+  let hueValue = (colorPhase % 1.0) * 360;
+  
+  colorMode(HSB, 360, 100, 100);
+  background(hueValue, 30, 85); // Soft rainbow background
+  colorMode(RGB);
 
   t += 0.5;
 
@@ -210,6 +224,11 @@ function mousePressed() {
     ) {
       started = true;
       cursor(ARROW);
+      
+      // Play ambient music when entering sketch
+      if (ambientMusic.isLoaded()) {
+        ambientMusic.loop(); // Loop the music continuously
+      }
     }
   } else {
     if (scatterProgress < 0.1) {
