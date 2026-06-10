@@ -16,6 +16,9 @@ function setup() {
   pixelDensity(1);
   noStroke();
 
+  // Start at yellow-orange (around 40-50 on the hue scale)
+  colorPhase = -0.11; // This starts the hue at yellow-orange
+
   layers = [
     {
       thresholdVal: 0.65,
@@ -64,6 +67,21 @@ function setup() {
       scatterDY: 2.5,
     },
   ];
+
+  // Create audio element for ambient music
+  createAudioElement();
+}
+
+function createAudioElement() {
+  let audio = document.getElementById('ambientAudio');
+  if (!audio) {
+    audio = document.createElement('audio');
+    audio.id = 'ambientAudio';
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.src = 'softclouds.mp3';
+    document.body.appendChild(audio);
+  }
 }
 
 function draw() {
@@ -219,6 +237,12 @@ function mousePressed() {
     ) {
       started = true;
       cursor(ARROW);
+      
+      // Play ambient music when entering sketch
+      let audio = document.getElementById('ambientAudio');
+      if (audio) {
+        audio.play();
+      }
     }
   } else {
     if (scatterProgress < 0.1) {
