@@ -16,8 +16,8 @@ function setup() {
   pixelDensity(1);
   noStroke();
 
-  // Start at yellow-orange (around 40-50 on the hue scale)
-  colorPhase = -0.11;
+  // Start at blue tone (around 200-240 on the hue scale)
+  colorPhase = -0.45;
 
   layers = [
     {
@@ -97,30 +97,35 @@ function draw() {
 }
 
 function drawFrontPage() {
-  // Get complementary background color (opposite on color wheel)
-  let bgHue = (colorPhase % 1.0) * 360;
-  let complementaryHue = (bgHue + 180) % 360;
+  // Get current hue and calculate complementary color
+  let currentHue = (colorPhase % 1.0) * 360;
+  if (currentHue < 0) currentHue += 360;
+  
+  let complementaryHue = (currentHue + 180) % 360;
   
   colorMode(HSB, 360, 100, 100);
-  background(bgHue, 30, 85);
+  background(currentHue, 30, 85);
   colorMode(RGB);
 
   // Draw three clouds with complementary color and different hue shifts
   // Cloud 1
   colorMode(HSB, 360, 100, 100);
-  fill(complementaryHue, 40, 70, 0.3);
+  fill(complementaryHue, 40, 70);
+  noStroke();
   colorMode(RGB);
   drawStaticCloud(width * 0.15, height * 0.2, 1.5);
 
   // Cloud 2
   colorMode(HSB, 360, 100, 100);
-  fill((complementaryHue + 15) % 360, 35, 75, 0.4);
+  fill((complementaryHue + 15) % 360, 35, 75);
+  noStroke();
   colorMode(RGB);
   drawStaticCloud(width * 0.7, height * 0.15, 1.2);
 
   // Cloud 3
   colorMode(HSB, 360, 100, 100);
-  fill((complementaryHue + 30) % 360, 45, 68, 0.35);
+  fill((complementaryHue + 30) % 360, 45, 68);
+  noStroke();
   colorMode(RGB);
   drawStaticCloud(width * 0.75, height * 0.35, 2.0);
 
@@ -130,15 +135,15 @@ function drawFrontPage() {
   textAlign(CENTER, CENTER);
   textSize(width * 0.08);
   textStyle(BOLD);
-  text("satellite", width / 2, height / 2 - height * 0.1);
+  text("satellite", width / 2, height / 2 - height * 0.15);
 
   textSize(width * 0.025);
   textStyle(NORMAL);
   fill(255, 255, 255);
-  text("by Mara Sophie List", width / 2, height / 2 - height * 0.04);
+  text("by Mara Sophie List", width / 2, height / 2 - height * 0.05);
 
   let bx = width / 2;
-  let by = height / 2 + height * 0.08;
+  let by = height / 2 + height * 0.12;
   let bw = width * 0.15;
   let bh = height * 0.08;
 
@@ -148,13 +153,16 @@ function drawFrontPage() {
     mouseY > by - bh / 2 &&
     mouseY < by + bh / 2;
 
+  // Button color matches complementary clouds
+  colorMode(HSB, 360, 100, 100);
   if (hovering) {
-    fill(60, 100, 200);
+    fill((complementaryHue + 15) % 360, 50, 60);
     cursor(HAND);
   } else {
-    fill(80, 130, 220);
+    fill(complementaryHue, 45, 65);
     cursor(ARROW);
   }
+  colorMode(RGB);
 
   rectMode(CENTER);
   rect(bx, by, bw, bh, 12);
@@ -175,9 +183,10 @@ function drawStaticCloud(cx, cy, scale) {
 }
 
 function drawSketch() {
-  // Slowly cycle through rainbow colors
-  colorPhase += 0.0005;
+  // Slowly cycle through rainbow colors (slightly faster)
+  colorPhase += 0.00055;
   let hueValue = (colorPhase % 1.0) * 360;
+  if (hueValue < 0) hueValue += 360;
   
   colorMode(HSB, 360, 100, 100);
   background(hueValue, 30, 85);
@@ -250,7 +259,7 @@ function drawSketch() {
 function mousePressed() {
   if (!started) {
     let bx = width / 2;
-    let by = height / 2 + height * 0.08;
+    let by = height / 2 + height * 0.12;
     let bw = width * 0.15;
     let bh = height * 0.08;
 
