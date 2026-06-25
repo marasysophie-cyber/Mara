@@ -97,49 +97,36 @@ function draw() {
 }
 
 function drawFrontPage() {
-  // Get current hue and calculate complementary color
-  let currentHue = (colorPhase % 1.0) * 360;
-  if (currentHue < 0) currentHue += 360;
-  
-  let complementaryHue = (currentHue + 180) % 360;
-  
-  colorMode(HSB, 360, 100, 100);
-  background(currentHue, 30, 85);
-  colorMode(RGB);
+  // Muted cool blue-green radial gradient background
+  for (let i = 0; i < width; i += 10) {
+    for (let j = 0; j < height; j += 10) {
+      let d = dist(i, j, width / 2, height / 2);
+      let maxDist = dist(0, 0, width / 2, height / 2);
+      let ratio = d / maxDist;
+      
+      // Muted cool blue-green gradient
+      let r = lerp(95, 120, ratio);
+      let g = lerp(125, 140, ratio);
+      let b = lerp(135, 155, ratio);
+      
+      fill(r, g, b);
+      noStroke();
+      rect(i, j, 10, 10);
+    }
+  }
 
-  // Draw three clouds with complementary color and different hue shifts
-  // Cloud 1
-  colorMode(HSB, 360, 100, 100);
-  fill(complementaryHue, 40, 70);
-  noStroke();
-  colorMode(RGB);
-  drawStaticCloud(width * 0.15, height * 0.2, 1.5);
-
-  // Cloud 2
-  colorMode(HSB, 360, 100, 100);
-  fill((complementaryHue + 15) % 360, 35, 75);
-  noStroke();
-  colorMode(RGB);
-  drawStaticCloud(width * 0.7, height * 0.15, 1.2);
-
-  // Cloud 3
-  colorMode(HSB, 360, 100, 100);
-  fill((complementaryHue + 30) % 360, 45, 68);
-  noStroke();
-  colorMode(RGB);
-  drawStaticCloud(width * 0.75, height * 0.35, 2.0);
-
-  // Text styling
-  colorMode(RGB);
-  fill(255, 255, 255);
+  // Text styling with scientific/digital font
+  fill(90, 75, 60); // Dark warm grey
   textAlign(CENTER, CENTER);
+  textFont('Courier New, monospace');
+  
   textSize(width * 0.08);
   textStyle(BOLD);
   text("satellite", width / 2, height / 2 - height * 0.15);
 
   textSize(width * 0.025);
   textStyle(NORMAL);
-  fill(255, 255, 255);
+  fill(90, 75, 60);
   text("by Mara Sophie List", width / 2, height / 2 - height * 0.05);
 
   let bx = width / 2;
@@ -153,33 +140,23 @@ function drawFrontPage() {
     mouseY > by - bh / 2 &&
     mouseY < by + bh / 2;
 
-  // Button color matches complementary clouds
-  colorMode(HSB, 360, 100, 100);
+  // Translucent grey button
   if (hovering) {
-    fill((complementaryHue + 15) % 360, 50, 60);
+    fill(130, 120, 110, 200);
     cursor(HAND);
   } else {
-    fill(complementaryHue, 45, 65);
+    fill(130, 120, 110, 150);
     cursor(ARROW);
   }
-  colorMode(RGB);
 
   rectMode(CENTER);
-  rect(bx, by, bw, bh, 12);
+  rect(bx, by, bw, bh, 8);
 
-  fill(255);
+  fill(90, 75, 60);
   textSize(width * 0.03);
   textStyle(BOLD);
   text("observar", bx, by);
   rectMode(CORNER);
-}
-
-function drawStaticCloud(cx, cy, scale) {
-  ellipse(cx, cy, 120 * scale, 60 * scale);
-  ellipse(cx - 40 * scale, cy + 10 * scale, 80 * scale, 50 * scale);
-  ellipse(cx + 40 * scale, cy + 10 * scale, 80 * scale, 50 * scale);
-  ellipse(cx - 20 * scale, cy - 20 * scale, 70 * scale, 50 * scale);
-  ellipse(cx + 20 * scale, cy - 20 * scale, 70 * scale, 50 * scale);
 }
 
 function drawSketch() {
