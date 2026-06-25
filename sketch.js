@@ -12,12 +12,12 @@ let scatterProgress = 0;
 let colorPhase = 0;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(window.innerWidth, window.innerHeight);
   pixelDensity(1);
   noStroke();
 
   // Start at yellow-orange (around 40-50 on the hue scale)
-  colorPhase = -0.11; // This starts the hue at yellow-orange
+  colorPhase = -0.11;
 
   layers = [
     {
@@ -84,6 +84,10 @@ function createAudioElement() {
   }
 }
 
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
+}
+
 function draw() {
   if (!started) {
     drawFrontPage();
@@ -93,29 +97,50 @@ function draw() {
 }
 
 function drawFrontPage() {
-  background(100, 120, 130);
+  // Get complementary background color (opposite on color wheel)
+  let bgHue = (colorPhase % 1.0) * 360;
+  let complementaryHue = (bgHue + 180) % 360;
+  
+  colorMode(HSB, 360, 100, 100);
+  background(bgHue, 30, 85);
+  colorMode(RGB);
 
-  fill(255, 255, 255, 20);
-  noStroke();
-  drawStaticCloud(120, 150, 1.2);
-  drawStaticCloud(400, 100, 0.9);
-  drawStaticCloud(420, 200, 3.0);
+  // Draw three clouds with complementary color and different hue shifts
+  // Cloud 1
+  colorMode(HSB, 360, 100, 100);
+  fill(complementaryHue, 40, 70, 0.3);
+  colorMode(RGB);
+  drawStaticCloud(width * 0.15, height * 0.2, 1.5);
 
-  fill(200, 240, 240);
+  // Cloud 2
+  colorMode(HSB, 360, 100, 100);
+  fill((complementaryHue + 15) % 360, 35, 75, 0.4);
+  colorMode(RGB);
+  drawStaticCloud(width * 0.7, height * 0.15, 1.2);
+
+  // Cloud 3
+  colorMode(HSB, 360, 100, 100);
+  fill((complementaryHue + 30) % 360, 45, 68, 0.35);
+  colorMode(RGB);
+  drawStaticCloud(width * 0.75, height * 0.35, 2.0);
+
+  // Text styling
+  colorMode(RGB);
+  fill(255, 255, 255);
   textAlign(CENTER, CENTER);
-  textSize(42);
+  textSize(width * 0.08);
   textStyle(BOLD);
-  text("satellite", width / 2, height / 2 - 80);
+  text("satellite", width / 2, height / 2 - height * 0.1);
 
-  textSize(16);
+  textSize(width * 0.025);
   textStyle(NORMAL);
-  fill(200, 240, 240);
-  text("by Mara Sophie List", width / 2, height / 2 - 35);
+  fill(255, 255, 255);
+  text("by Mara Sophie List", width / 2, height / 2 - height * 0.04);
 
   let bx = width / 2;
-  let by = height / 2 + 60;
-  let bw = 160;
-  let bh = 50;
+  let by = height / 2 + height * 0.08;
+  let bw = width * 0.15;
+  let bh = height * 0.08;
 
   let hovering =
     mouseX > bx - bw / 2 &&
@@ -135,7 +160,7 @@ function drawFrontPage() {
   rect(bx, by, bw, bh, 12);
 
   fill(255);
-  textSize(20);
+  textSize(width * 0.03);
   textStyle(BOLD);
   text("observar", bx, by);
   rectMode(CORNER);
@@ -225,9 +250,9 @@ function drawSketch() {
 function mousePressed() {
   if (!started) {
     let bx = width / 2;
-    let by = height / 2 + 60;
-    let bw = 160;
-    let bh = 50;
+    let by = height / 2 + height * 0.08;
+    let bw = width * 0.15;
+    let bh = height * 0.08;
 
     if (
       mouseX > bx - bw / 2 &&
