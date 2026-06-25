@@ -97,26 +97,32 @@ function draw() {
 }
 
 function drawFrontPage() {
-  // Muted cool blue-green radial gradient background
-  for (let i = 0; i < width; i += 10) {
-    for (let j = 0; j < height; j += 10) {
-      let d = dist(i, j, width / 2, height / 2);
-      let maxDist = dist(0, 0, width / 2, height / 2);
-      let ratio = d / maxDist;
-      
-      // Muted cool blue-green gradient
-      let r = lerp(95, 120, ratio);
-      let g = lerp(125, 140, ratio);
-      let b = lerp(135, 155, ratio);
-      
-      fill(r, g, b);
-      noStroke();
-      rect(i, j, 10, 10);
-    }
+  // Starting blue background (same as artwork)
+  background(100, 140, 180);
+  
+  // Soft radial gradient of green (complementary to blue) blending into blue
+  colorMode(HSB, 360, 100, 100);
+  let complementaryHue = 60; // Green - complementary to blue
+  colorMode(RGB);
+  
+  let maxRadius = dist(0, 0, width, height) / 2;
+  for (let i = 0; i < maxRadius; i += 5) {
+    let ratio = i / maxRadius;
+    
+    // Interpolate from green center to blue edges
+    colorMode(HSB, 360, 100, 100);
+    let h = lerp(complementaryHue, 220, ratio);
+    let s = lerp(50, 30, ratio);
+    let b = lerp(70, 85, ratio);
+    fill(h, s, b);
+    colorMode(RGB);
+    
+    noStroke();
+    ellipse(width / 2, height / 2, i * 2, i * 2);
   }
 
   // Text styling with scientific/digital font
-  fill(90, 75, 60); // Dark warm grey
+  fill(0, 0, 0); // Black
   textAlign(CENTER, CENTER);
   textFont('Courier New, monospace');
   
@@ -126,7 +132,7 @@ function drawFrontPage() {
 
   textSize(width * 0.025);
   textStyle(NORMAL);
-  fill(90, 75, 60);
+  fill(0, 0, 0); // Black
   text("by Mara Sophie List", width / 2, height / 2 - height * 0.05);
 
   let bx = width / 2;
@@ -152,7 +158,7 @@ function drawFrontPage() {
   rectMode(CENTER);
   rect(bx, by, bw, bh, 8);
 
-  fill(90, 75, 60);
+  fill(0, 0, 0); // Black
   textSize(width * 0.03);
   textStyle(BOLD);
   text("observar", bx, by);
